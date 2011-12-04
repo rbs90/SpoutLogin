@@ -1,9 +1,6 @@
 package de.rbs90.bukkit.plugins.authtest;
 
-import javax.swing.plaf.basic.BasicOptionPaneUI.ButtonActionListener;
-
 import org.bukkit.plugin.Plugin;
-import org.getspout.spoutapi.event.screen.ButtonClickEvent;
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.GenericButton;
 import org.getspout.spoutapi.gui.GenericLabel;
@@ -12,7 +9,7 @@ import org.getspout.spoutapi.gui.GenericTextField;
 import org.getspout.spoutapi.gui.GenericTexture;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-import de.rb90.bukkit.plugins.authtest.gui.LoginButton;
+import de.rbs90.bukkit.plugins.authtest.guielements.LoginButton;
 
 public class AuthentificationPopup{
 	
