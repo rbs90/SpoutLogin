@@ -4,8 +4,8 @@ import org.getspout.spoutapi.event.screen.ButtonClickEvent;
 import org.getspout.spoutapi.gui.GenericButton;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-import de.rb90.bukkit.plugins.authtest.AuthentificationPopup;
-import de.rb90.bukkit.plugins.authtest.MainAuthentificate;
+import de.rbs90.bukkit.plugins.authtest.AuthentificationPopup;
+import de.rbs90.bukkit.plugins.authtest.MainAuthentificate;
 
 public class LoginButton extends GenericButton {
 
