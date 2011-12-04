@@ -1,5 +1,6 @@
 package de.rb90.bukkit.plugins.authtest;
 
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
@@ -22,6 +23,7 @@ public class PlayerActionDenieListener extends PlayerListener{
 			super.onPlayerPickupItem(event);
 	}
 	
+	
 	@Override
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		if (main.guest_players.contains(event.getPlayer()))
@@ -36,5 +38,11 @@ public class PlayerActionDenieListener extends PlayerListener{
 			event.setCancelled(true);
 		else
 			super.onPlayerInteractEntity(event);
+	}
+	
+	@Override
+	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+		// TODO Auto-generated method stub
+		super.onPlayerCommandPreprocess(event);
 	}
 }

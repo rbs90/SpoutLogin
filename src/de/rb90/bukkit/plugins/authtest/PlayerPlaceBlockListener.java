@@ -15,17 +15,19 @@ public class PlayerPlaceBlockListener extends BlockListener{
 
 	@Override
 	public void onBlockBreak(BlockBreakEvent event){ 
-		if (main.guest_players.contains(event.getPlayer()))
+		if (main.guest_players.contains(event.getPlayer())){
+			event.getPlayer().sendMessage("You dont have the permission to do this. Please use /slogin to login or register.");
+			System.out.println("block_event");
 			event.setCancelled(true);
-		else
-			super.onBlockBreak(event);
+		}
 	}
 	
 	@Override
 	public void onBlockPlace(BlockPlaceEvent event) {
 		if (main.guest_players.contains(event.getPlayer()))
 			event.setCancelled(true);
-		else
-			super.onBlockPlace(event);
 	}
+	
+	
+	
 }

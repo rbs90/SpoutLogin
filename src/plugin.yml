@@ -7,3 +7,6 @@ website:  http://tu-chemnitz.de/~rbs
 main:  de.rb90.bukkit.plugins.authtest.MainAuthentificate
 
 commands:
+    slogin:
+          description: Login via Spout interface.
+          usage: /<command>
