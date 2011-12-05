@@ -1,18 +1,25 @@
-package de.rbs90.bukkit.plugins.authtest;
+package de.rbs90.bukkit.plugins.spoutlogin.listener;
 
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerListener;
-import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.*;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class PlayerActionDenieListener extends PlayerListener{
+import de.rbs90.bukkit.plugins.spoutlogin.MainAuthentificate;
+import de.rbs90.bukkit.plugins.spoutlogin.guielements.AuthentificationPopup;
+
+public class MyPlayerListener extends PlayerListener{
 
 	
 	MainAuthentificate main;
 	
-	public PlayerActionDenieListener(MainAuthentificate mainAuthentificate) {
+	public MyPlayerListener(MainAuthentificate mainAuthentificate) {
 		main = mainAuthentificate;
+	}
+	
+	@Override
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		//super.onPlayerJoin(event);
+		main.setPlayerAsGuest((SpoutPlayer) event.getPlayer());
+		new AuthentificationPopup(main, (SpoutPlayer) event.getPlayer());
 	}
 	
 	@Override

@@ -3,8 +3,9 @@ version:  0.0.1
 description:  Spout Popup for Login
 author:  rbs90
 website:  http://tu-chemnitz.de/~rbs
+depend: [Spout]
 
-main:  de.rb90.bukkit.plugins.authtest.MainAuthentificate
+main:  de.rbs90.bukkit.plugins.spoutlogin.MainAuthentificate
 
 commands:
     slogin:

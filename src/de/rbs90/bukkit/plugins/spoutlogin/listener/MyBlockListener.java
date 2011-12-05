@@ -1,15 +1,17 @@
-package de.rbs90.bukkit.plugins.authtest;
+package de.rbs90.bukkit.plugins.spoutlogin.listener;
 
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-public class PlayerPlaceBlockListener extends BlockListener{
+import de.rbs90.bukkit.plugins.spoutlogin.MainAuthentificate;
+
+public class MyBlockListener extends BlockListener{
 	
 	MainAuthentificate main;
 	
 	
-	public PlayerPlaceBlockListener(MainAuthentificate mainAuthentificate) {
+	public MyBlockListener(MainAuthentificate mainAuthentificate) {
 		main = mainAuthentificate;
 	}
 
