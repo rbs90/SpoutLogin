@@ -28,6 +28,7 @@ public class MainAuthentificate extends JavaPlugin{
 	public Vector<SpoutPlayer> guest_players = new Vector<SpoutPlayer>();
 	public Map<SpoutPlayer, Location> old_locations = new HashMap<SpoutPlayer, Location>();
 	
+	public SettingsManager settings;
 	public LoginChecker loginChecker;
 	
 	@Override
@@ -38,6 +39,8 @@ public class MainAuthentificate extends JavaPlugin{
 
 	@Override
 	public void onEnable() {
+		
+		settings.load();
 		//System.out.println("STARTING!!!");
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvent(Event.Type.PLAYER_JOIN, new MyPlayerListener(this), Event.Priority.Normal, this);
