@@ -35,6 +35,7 @@ public class MainAuthentificate extends JavaPlugin{
 	public void onDisable() {
 		PluginDescriptionFile pdfFile = this.getDescription();
         log.info(pdfFile.getName()+" version "+pdfFile.getVersion()+" is disabled!");
+        settings.save();
 	}
 
 	@Override
