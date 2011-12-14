@@ -1,5 +1,4 @@
 package de.rbs90.bukkit.plugins.spoutlogin;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -28,21 +27,21 @@ public class MainAuthentificate extends JavaPlugin{
 	public Vector<SpoutPlayer> guest_players = new Vector<SpoutPlayer>();
 	public Map<SpoutPlayer, Location> old_locations = new HashMap<SpoutPlayer, Location>();
 	
-	public SettingsManager settings;
+	public static SettingsManager settings;
 	public LoginChecker loginChecker;
 	
 	@Override
 	public void onDisable() {
 		PluginDescriptionFile pdfFile = this.getDescription();
         log.info(pdfFile.getName()+" version "+pdfFile.getVersion()+" is disabled!");
-        settings.save();
+        //settings.save();
 	}
 
 	@Override
 	public void onEnable() {
-		
+		settings = new SettingsManager();
 		settings.load();
-		//System.out.println("STARTING!!!");
+		////System.out.println("STARTING!!!");
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvent(Event.Type.PLAYER_JOIN, new MyPlayerListener(this), Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.PLAYER_PICKUP_ITEM, new MyPlayerListener(this), Event.Priority.Normal, this);
@@ -50,7 +49,7 @@ public class MainAuthentificate extends JavaPlugin{
 		pm.registerEvent(Event.Type.PLAYER_INTERACT_ENTITY, new MyPlayerListener(this), Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.BLOCK_PLACE, new MyBlockListener(this), Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.BLOCK_BREAK, new MyBlockListener(this), Event.Priority.Normal, this);
-		pm.registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, new MyBlockListener(this), Event.Priority.Normal, this);
+		//pm.registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, new MyBlockListener(this), Event.Priority.Normal, this);
 		//pm.registerEvent(Event.Type., new PlayerPlaceBlockListener(this), Event.Priority.Normal, this);
 		pm.registerEvent(Event.Type.ENTITY_TARGET, new MyAttackListener(this), Event.Priority.Normal, this);
 		//pm.registerEvent(Event.Type.PLAYER_INVENTORY, new PlayerActionDenieListener(this), Event.Priority.Normal, this);
@@ -61,13 +60,9 @@ public class MainAuthentificate extends JavaPlugin{
 		
 		new Thread(){
 		
+			@Override
 			public void run() {
-				try {
 					loginChecker = new LoginChecker();
-				} catch (ClassNotFoundException | SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 			};
 		}.start();
 	}
@@ -77,7 +72,6 @@ public class MainAuthentificate extends JavaPlugin{
 			String label, String[] args) {
 		
 		boolean success = false;
-		
 		if (command.getName().equalsIgnoreCase("slogin")){
 			success = true;
 			new AuthentificationPopup(this, (SpoutPlayer) sender);
@@ -89,7 +83,9 @@ public class MainAuthentificate extends JavaPlugin{
 	public void setPlayerAsGuest(SpoutPlayer player){
 		guest_players.add(player);
 		old_locations.put(player, player.getLocation());
-		player.teleport(player.getWorld().getSpawnLocation());
+		Location spawnLocation = player.getWorld().getSpawnLocation();
+		spawnLocation.setY(player.getWorld().getHighestBlockYAt(spawnLocation));
+		player.teleport(spawnLocation);
 	}
 	
 	public void setPlayerAsAuthentificated(SpoutPlayer player){

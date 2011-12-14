@@ -17,7 +17,7 @@ public class MyAttackListener extends EntityListener {
 	@Override
 	public void onEntityTarget(EntityTargetEvent event) {
 		for(SpoutPlayer player : main.guest_players){
-			//System.out.println(player.getEntityId() + " ==  " + event.getTarget().getEntityId() + " ?");
+			////System.out.println(player.getEntityId() + " ==  " + event.getTarget().getEntityId() + " ?");
 			if (player.getEntityId() == event.getTarget().getEntityId())
 			{
 				event.setCancelled(true);

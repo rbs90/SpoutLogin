@@ -1,41 +1,50 @@
 package de.rbs90.bukkit.plugins.spoutlogin.guielements;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
-import org.getspout.spoutapi.gui.*;
+import org.bukkit.configuration.ConfigurationSection;
+import org.getspout.spoutapi.gui.Color;
+import org.getspout.spoutapi.gui.GenericButton;
+import org.getspout.spoutapi.gui.GenericLabel;
+import org.getspout.spoutapi.gui.GenericPopup;
+import org.getspout.spoutapi.gui.GenericTextField;
 
 import de.rbs90.bukkit.plugins.spoutlogin.MainAuthentificate;
 import de.rbs90.bukkit.plugins.spoutlogin.crypting.UserData;
 
 public class RegisterPopup extends GenericPopup{
 	
-	private Map<String, GenericLabel> labels = new HashMap<String, GenericLabel>();
-	private Map<String, GenericTextField> textFields = new HashMap<String, GenericTextField>();
-	private String[] order = {"name", "email", "pass1", "pass2"};
-	
+	private ArrayList <GenericLabel> labels = new ArrayList<GenericLabel>();
+	private ArrayList<GenericTextField> textFields = new ArrayList<GenericTextField>();
 	private GenericButton regButton;
 	private final MainAuthentificate main;
 	private GenericLabel errorLabel;
 	
 	private UserData data;
+	private ConfigurationSection serverPassSettings;
 	
 	public RegisterPopup(MainAuthentificate main) {
+		
 		this.main = main;
-		labels.put("name", new GenericLabel("Name (ingame):"));
-		labels.put("email", new GenericLabel("email address (should be valid, only used for password reset):"));
-		labels.put("pass1", new GenericLabel("password:"));
-		labels.put("pass2", new GenericLabel("retype password:"));
+		serverPassSettings = MainAuthentificate.settings.getServerPassSettings();
+		labels.add(new GenericLabel("Name (ingame):"));
+		labels.add(new GenericLabel("email address (should be valid, only used for password reset):"));
+		labels.add(new GenericLabel("password:"));
+		labels.add(new GenericLabel("retype password:"));
+		System.out.println("servpass=" + serverPassSettings.getBoolean("enabled"));
+		if (serverPassSettings.getBoolean("enabled"))
+			labels.add(new GenericLabel("Server password:"));
 		//labels.put("birth", new GenericLabel("birthday (optional):"));
 		//labels.put("", new GenericLabel("age (optional):"));
 		
-		textFields.put("name", new GenericTextField());
-		textFields.put("email", new GenericTextField());
-		textFields.put("pass1", new GenericTextField());
-		textFields.put("pass2", new GenericTextField());
+		textFields.add(new GenericTextField());
+		textFields.add(new GenericTextField());
+		textFields.add(new GenericTextField());
+		textFields.add(new GenericTextField());
+		if (serverPassSettings.getBoolean("enabled"))
+			textFields.add(new GenericTextField());
 		
 		regButton = new GenericButton("Send Registration");
-		
 		errorLabel = new GenericLabel();
 		
 		draw();
@@ -44,30 +53,30 @@ public class RegisterPopup extends GenericPopup{
 	private void draw(){
 		
 		int count = 0;
-		for (String elem: order)
+		for (int i = 0; i < labels.size(); i++)
 		{
-			labels.get(elem).setX(5);
-			labels.get(elem).setY(count*35 + 5);
-			labels.get(elem).setWidth(getMaxWidth() - 10);
-			labels.get(elem).setHeight(10);
+			labels.get(i).setX(5);
+			labels.get(i).setY(count*35 + 5);
+			labels.get(i).setWidth(getMaxWidth() - 10);
+			labels.get(i).setHeight(10);
 			
-			textFields.get(elem).setX(5);
-			textFields.get(elem).setY(count*35 + 20);
-			textFields.get(elem).setWidth(getMaxWidth() - 10);
-			textFields.get(elem).setHeight(15);
-			textFields.get(elem).setMaximumCharacters(40);
-			if (elem.startsWith("pass"))
-				textFields.get(elem).setPasswordField(true);
+			textFields.get(i).setX(5);
+			textFields.get(i).setY(count*35 + 20);
+			textFields.get(i).setWidth(getMaxWidth() - 10);
+			textFields.get(i).setHeight(15);
+			textFields.get(i).setMaximumCharacters(40);
+			if (i > 1)
+				textFields.get(i).setPasswordField(true);
 			
-			attachWidget(getPlugin(), labels.get(elem));
-			attachWidget(getPlugin(), textFields.get(elem));
+			attachWidget(getPlugin(), labels.get(i));
+			attachWidget(getPlugin(), textFields.get(i));
 			
 			count ++;
 		}
 		
-		regButton.setX(10);
+		regButton.setX(getMaxWidth() / 2 - 50 );
 		regButton.setY(getMaxHeight() - 25);
-		regButton.setWidth(getMaxWidth() - 20);
+		regButton.setWidth(100);
 		regButton.setHeight(15);
 		attachWidget(getPlugin(), regButton);
 		
@@ -77,41 +86,50 @@ public class RegisterPopup extends GenericPopup{
 		errorLabel.setHeight(15);
 		errorLabel.setVisible(false);
 		attachWidget(getPlugin(), regButton);
+		attachWidget(getPlugin(), errorLabel);
 	}
 
 	public boolean proveData() {
 		
 		resetErrorFields();
 		
-		String name = textFields.get("name").getText();
-		String email = textFields.get("email").getText();
-		String pass1 = textFields.get("pass1").getText();
-		String pass2 = textFields.get("pass2").getText();
+		String name = textFields.get(0).getText();
+		String email = textFields.get(1).getText();
+		String pass1 = textFields.get(2).getText();
+		String pass2 = textFields.get(3).getText();
+		
+		
+		
 		data = new UserData(name, email, pass1, false);
 		
 		
-		String error = null; String error_elem = null;
+		String error = null; int error_elem = -1;
 		if(!main.loginChecker.isNameAvailable(name)){
 			error = "Username already taken.";
-			error_elem = "name";
+			error_elem = 0;
 		}
 		else if (!isValidMail(email)){
 			error = "No valid email adress.";
-			error_elem = "email";
+			error_elem = 1;
 		}
 		else if (!pass1.equals(pass2)){
 			error = "passwords are not equal.";
-			error_elem = "pass2";
+			error_elem = 3;
 		}
-			
-		
-		if (error == null)
+		if (serverPassSettings.getBoolean("enabled"))
+			if(!textFields.get(4).getText().equals(serverPassSettings.getString("password").trim())){
+				System.out.println("should be: " + serverPassSettings.get("password") + " is: " + textFields.get(4).getText() + "end");
+				error = "Server password incorrect!";
+				error_elem = 4;
+			}
+		if (error == null){
 			return true;
+		}
 		else{
 			textFields.get(error_elem).setBorderColor(new Color(255, 0, 0));
 			textFields.get(error_elem).setText("");
-			if (error_elem.equals("pass2"))
-				textFields.get("pass1").setText("");
+			if (error_elem == 3)
+				textFields.get(2).setText("");
 			
 			errorLabel.setText(error);
 			errorLabel.setVisible(true);
@@ -131,7 +149,7 @@ public class RegisterPopup extends GenericPopup{
 	
 	private void resetErrorFields()
 	{
-		for (GenericTextField field : textFields.values())
+		for (GenericTextField field : textFields)
 			field.setBorderColor(new GenericTextField().getBorderColor());
 	}
 

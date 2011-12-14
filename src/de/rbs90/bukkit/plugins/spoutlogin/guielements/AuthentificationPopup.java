@@ -42,10 +42,10 @@ public class AuthentificationPopup extends GenericPopup{
     
 	public void createScreen(SpoutPlayer player)
     {
-		System.out.println("Creating screen...");
+		//System.out.println("Creating screen...");
         SpoutPlayer splayer = player;
         
-        System.out.println("res: " + splayer.getMainScreen().getMaxWidth() + "x" + splayer.getMainScreen().getMaxHeight());
+        //System.out.println("res: " + splayer.getMainScreen().getMaxWidth() + "x" + splayer.getMainScreen().getMaxHeight());
         splayer.getMainScreen().getMaxHeight();
         
         texture = new GenericTexture("http://cdn.getspout.org/img/logo/spout_xmas_290x135-2.png");

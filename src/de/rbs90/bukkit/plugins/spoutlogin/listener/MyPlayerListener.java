@@ -1,6 +1,11 @@
 package de.rbs90.bukkit.plugins.spoutlogin.listener;
 
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerListener;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import de.rbs90.bukkit.plugins.spoutlogin.MainAuthentificate;
@@ -34,7 +39,10 @@ public class MyPlayerListener extends PlayerListener{
 	@Override
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		if (main.guest_players.contains(event.getPlayer()))
-			event.setCancelled(true);
+			if (main.guest_players.contains(event.getPlayer())){
+				event.getPlayer().sendMessage("You dont have the permission to do this. Please use /slogin to login or register.");
+				event.setCancelled(true);
+			}
 		else
 			super.onPlayerInteract(event);
 	}
