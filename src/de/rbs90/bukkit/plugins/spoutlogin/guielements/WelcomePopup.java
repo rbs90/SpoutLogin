@@ -15,7 +15,7 @@ import org.getspout.spoutapi.gui.GenericTexture;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 
-public class AuthentificationPopup extends GenericPopup{
+public class WelcomePopup extends GenericPopup{
 	
     GenericTextField userBox;
     GenericTextField passBox;
@@ -33,7 +33,7 @@ public class AuthentificationPopup extends GenericPopup{
 	Plugin plugin;
     
     
-    public AuthentificationPopup(Plugin plugin, SpoutPlayer player) {
+    public WelcomePopup(Plugin plugin, SpoutPlayer player) {
 		this.plugin = plugin;
 		createScreen(player);
 		setTransparent(false);
@@ -76,6 +76,8 @@ public class AuthentificationPopup extends GenericPopup{
         playerLbl = new GenericLabel(ChatColor.YELLOW + "Players online: " + Bukkit.getServer().getOnlinePlayers().length);
         playerLbl.setX(10);
         playerLbl.setY(splayer.getMainScreen().getMaxHeight() - 80);
+        playerLbl.setWidth(200);
+        playerLbl.setHeight(15);
         
         Vector<Player> onlineOps = getOnlineOps();
         String opstext = ChatColor.BLUE + "currently online ops (" + onlineOps.size() + "):" + ChatColor.WHITE;
@@ -86,15 +88,20 @@ public class AuthentificationPopup extends GenericPopup{
         opsLbl= new GenericLabel(opstext);
         opsLbl.setX(10);
         opsLbl.setY(splayer.getMainScreen().getMaxHeight() - 70);
-        
+        opsLbl.setWidth(200);
+        opsLbl.setHeight(70);
         
         userLbl = new GenericLabel("user:");
         userLbl.setX(splayer.getMainScreen().getMaxWidth()  - 160);
         userLbl.setY(splayer.getMainScreen().getMaxHeight() - 60);
+        userLbl.setWidth(60);
+        userLbl.setHeight(20);
         
         passLbl = new GenericLabel("password:");
         passLbl.setX(splayer.getMainScreen().getMaxWidth()  - 160);
         passLbl.setY(splayer.getMainScreen().getMaxHeight() - 40);
+        passLbl.setWidth(60);
+        passLbl.setHeight(20);
         
         statusLbl = new GenericLabel("Login incorrect:(");
         statusLbl.setTextColor(new Color(255, 0, 0));

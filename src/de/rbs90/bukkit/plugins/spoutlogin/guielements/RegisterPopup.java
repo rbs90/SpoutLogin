@@ -9,7 +9,7 @@ import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.gui.GenericPopup;
 import org.getspout.spoutapi.gui.GenericTextField;
 
-import de.rbs90.bukkit.plugins.spoutlogin.MainAuthentificate;
+import de.rbs90.bukkit.plugins.spoutlogin.SpoutLogin;
 import de.rbs90.bukkit.plugins.spoutlogin.crypting.UserData;
 
 public class RegisterPopup extends GenericPopup{
@@ -17,16 +17,15 @@ public class RegisterPopup extends GenericPopup{
 	private ArrayList <GenericLabel> labels = new ArrayList<GenericLabel>();
 	private ArrayList<GenericTextField> textFields = new ArrayList<GenericTextField>();
 	private GenericButton regButton;
-	private final MainAuthentificate main;
 	private GenericLabel errorLabel;
 	
 	private UserData data;
 	private ConfigurationSection serverPassSettings;
+	private GenericButton cancelButton;
 	
-	public RegisterPopup(MainAuthentificate main) {
+	public RegisterPopup() {
 		
-		this.main = main;
-		serverPassSettings = MainAuthentificate.settings.getServerPassSettings();
+		serverPassSettings = SpoutLogin.settings.getServerPassSettings();
 		labels.add(new GenericLabel("Name (ingame):"));
 		labels.add(new GenericLabel("email address (should be valid, only used for password reset):"));
 		labels.add(new GenericLabel("password:"));
@@ -45,6 +44,7 @@ public class RegisterPopup extends GenericPopup{
 			textFields.add(new GenericTextField());
 		
 		regButton = new GenericButton("Send Registration");
+		cancelButton = new GenericButton("Cancel");
 		errorLabel = new GenericLabel();
 		
 		draw();
@@ -74,11 +74,17 @@ public class RegisterPopup extends GenericPopup{
 			count ++;
 		}
 		
-		regButton.setX(getMaxWidth() / 2 - 50 );
+		regButton.setX(getMaxWidth() - 100 - 10);
 		regButton.setY(getMaxHeight() - 25);
 		regButton.setWidth(100);
 		regButton.setHeight(15);
 		attachWidget(getPlugin(), regButton);
+		
+		cancelButton.setX(10);
+		cancelButton.setY(getMaxHeight() - 25);
+		cancelButton.setWidth(100);
+		cancelButton.setHeight(15);
+		attachWidget(getPlugin(), cancelButton);
 		
 		errorLabel.setX(10);
 		errorLabel.setY(getMaxHeight() - 35);
@@ -104,7 +110,7 @@ public class RegisterPopup extends GenericPopup{
 		
 		
 		String error = null; int error_elem = -1;
-		if(!main.loginChecker.isNameAvailable(name)){
+		if(!SpoutLogin.loginChecker.isNameAvailable(name)){
 			error = "Username already taken.";
 			error_elem = 0;
 		}

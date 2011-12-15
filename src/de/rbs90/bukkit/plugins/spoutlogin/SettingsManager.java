@@ -52,7 +52,6 @@ public class SettingsManager {
 			database = config.getConfigurationSection("database");
 			serverPass = config.getConfigurationSection("server-password");
 			registration = config.getConfigurationSection("registration");
-
 	}
 	
 	public void save(){
@@ -85,7 +84,7 @@ public class SettingsManager {
 		database = config.getConfigurationSection("database");
 		database.set("address","mysql://www.example.org");
 		database.set("port","3306");
-		database.set("table","slogin");
+		database.set("dbname","slogin");
 		database.set("user","slogin");
 		database.set("pass","yourpasswordhere");
 		
@@ -101,9 +100,6 @@ public class SettingsManager {
 		config.createSection("phpBB");
 		registration = config.getConfigurationSection("registration");
 		registration.set("email", "not yet implemented.");
-		
-		
-		
 		save();
 	}
 	

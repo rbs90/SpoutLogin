@@ -9,8 +9,8 @@ import java.sql.Statement;
 import org.bukkit.configuration.ConfigurationSection;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-import de.rbs90.bukkit.plugins.spoutlogin.MainAuthentificate;
-import de.rbs90.bukkit.plugins.spoutlogin.guielements.AuthentificationPopup;
+import de.rbs90.bukkit.plugins.spoutlogin.SpoutLogin;
+import de.rbs90.bukkit.plugins.spoutlogin.guielements.WelcomePopup;
 
 public class LoginChecker {
 	
@@ -22,21 +22,7 @@ public class LoginChecker {
 		//init SQL Connection...
 
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			config = MainAuthentificate.settings.getDatabaseSettings();
-			Connection connection = DriverManager.getConnection("jdbc:" + config.getString("address") + ":" + config.getString("port") + "/" + config.getString("table"), config.getString("user"), config.getString("pass"));
-			statement = connection.createStatement();
-			
-			//check if table exists:
-			statement.execute("CREATE TABLE IF NOT EXISTS `users` ("
-					 + "`id` int(10) NOT NULL auto_increment,"
-					 + "`name` text NOT NULL,"
-					 + "`registredsince` timestamp NOT NULL default CURRENT_TIMESTAMP,"
-					 + "`email` text NOT NULL,"
-					 + "`password` text NOT NULL,"
-					 + "`approved` tinyint(1) NOT NULL default '0',"
-					 + "PRIMARY KEY  (`id`)"
-					 + ") ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1");
+			sqlInit();
 			
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -45,11 +31,27 @@ public class LoginChecker {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
 	}
 
-	public Boolean checkLogin(SpoutPlayer player, AuthentificationPopup popup){
+	private void sqlInit() throws ClassNotFoundException, SQLException {
+		Class.forName("com.mysql.jdbc.Driver");
+		config = SpoutLogin.settings.getDatabaseSettings();
+		Connection connection = DriverManager.getConnection("jdbc:" + config.getString("address") + ":" + config.getString("port") + "/" + config.getString("dbname"), config.getString("user"), config.getString("pass"));
+		statement = connection.createStatement();
+		
+		//check if table exists:
+		statement.execute("CREATE TABLE IF NOT EXISTS `users` ("
+				 + "`id` int(10) NOT NULL auto_increment,"
+				 + "`name` text NOT NULL,"
+				 + "`registredsince` timestamp NOT NULL default CURRENT_TIMESTAMP,"
+				 + "`email` text NOT NULL,"
+				 + "`password` text NOT NULL,"
+				 + "`approved` tinyint(1) NOT NULL default '0',"
+				 + "PRIMARY KEY  (`id`)"
+				 + ") ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1");
+	}
+
+	public Boolean checkLogin(SpoutPlayer player, WelcomePopup popup){
 		try {
 			if(isLoginOK(popup.getUserName(), popup.getPassword())){
 				player.setDisplayName(popup.getUserName()); //TODO: set real name??
@@ -62,8 +64,15 @@ public class LoginChecker {
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			popup.getStatusLabel().setText("Something went wrong:( SQL Server down?");
+			popup.getStatusLabel().setText("Something went wrong:( SQL Server down?\n Trying to reconnect to SQL server...");
 			popup.getStatusLabel().setVisible(true);
+			try {
+				sqlInit();
+			} catch (ClassNotFoundException | SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
 			e.printStackTrace();
 		}
 		return false;
